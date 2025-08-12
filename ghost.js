@@ -46,3 +46,4 @@ class Ghost {
         this.randomTargetIndex += addition;
         this.randomTargetIndex = this.randomTargetIndex % 4;
     }
+}
