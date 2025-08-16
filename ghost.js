@@ -29,14 +29,6 @@ class Ghost {
         }, 10000);
     }
 
-    getMapX() {
-        return Math.floor(this.x / this.width);
-    }
-
-    getMapY() {
-        return Math.floor(this.y / this.height);
-    }
-
     isInRange() {
         let xDistance = Math.abs(pacman.getMapX() - this.getMapX());
         let yDistance = Math.abs(pacman.getMapY() - this.getMapY());
@@ -71,23 +63,97 @@ class Ghost {
 
     moveBackwards() {
         switch (this.direction) {
-            case DIRECTION_RIGHT: // Right
+            case 4: // Right
                 this.x -= this.speed;
                 break;
-            case DIRECTION_UP: // Up
+            case 3: // Up
                 this.y += this.speed;
                 break;
-            case DIRECTION_LEFT: // Left
+            case 2: // Left
                 this.x += this.speed;
                 break;
-            case DIRECTION_BOTTOM: // Bottom
+            case 1: // Bottom
                 this.y -= this.speed;
                 break;
         }
     }
 
-    // Placeholders so it doesn't throw errors
-    changeDirectionIfPossible() {}
-    moveForwards() {}
-    checkCollisions() { return false; }
+    moveForwards() {
+        switch (this.direction) {
+            case 4: // Right
+                this.x += this.speed;
+                break;
+            case 3: // Up
+                this.y -= this.speed;
+                break;
+            case 2: // Left
+                this.x -= this.speed;
+                break;
+            case 1: // Bottom
+                this.y += this.speed;
+                break;
+        }
+    }
+
+    checkCollisions() {
+        let isCollided = false;
+        if (
+            map[parseInt(this.y / oneBlockSize)][
+                parseInt(this.x / oneBlockSize)
+            ] == 1 ||
+            map[parseInt(this.y / oneBlockSize + 0.9999)][
+                parseInt(this.x / oneBlockSize)
+            ] == 1 ||
+            map[parseInt(this.y / oneBlockSize)][
+                parseInt(this.x / oneBlockSize + 0.9999)
+            ] == 1 ||
+            map[parseInt(this.y / oneBlockSize + 0.9999)][
+                parseInt(this.x / oneBlockSize + 0.9999)
+            ] == 1
+        ) {
+            isCollided = true;
+        }
+        return isCollided;
+    }
+
+    changeDirectionIfPossible() {
+        let tempDirection = this.direction;
+        this.direction = this.calculateNewDirection(
+            map,
+            parseInt(this.target.x / oneBlockSize),
+            parseInt(this.target.y / oneBlockSize)
+        );
+        if (typeof this.direction == "undefined") {
+            this.direction = tempDirection;
+            return;
+        }
+        if (
+            this.getMapY() != this.getMapYRightSide() &&
+            (this.direction == DIRECTION_LEFT ||
+                this.direction == DIRECTION_RIGHT)
+        ) {
+            this.direction = DIRECTION_UP;
+        }
+        if (
+            this.getMapX() != this.getMapXRightSide() &&
+            this.direction == DIRECTION_UP
+        ) {
+            this.direction = DIRECTION_LEFT;
+        }
+        this.moveForwards();
+        if (this.checkCollisions()) {
+            this.moveBackwards();
+            this.direction = tempDirection;
+        } else {
+            this.moveBackwards();
+        }
+        console.log(this.direction);
+    }
+
+    calculateNewDirection(map, destX, destY) {
+        let mp = [];
+        for (let i = 0; i < map.length; i++) {
+            mp[i] = map[i].slice();
+        }
+    }
 }
