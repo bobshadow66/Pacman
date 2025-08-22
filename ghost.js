@@ -188,7 +188,7 @@ class Ghost {
 
         if (
             poped.x - 1 >= 0 &&
-            poped.x - 1 < numOfRows &&
+            poped.x - 1 < numOfColumns &&  // FIXED: should compare with columns
             mp[poped.y][poped.x - 1] != 1
         ) {
             let tempMoves = poped.moves.slice();
@@ -197,7 +197,7 @@ class Ghost {
         }
         if (
             poped.x + 1 >= 0 &&
-            poped.x + 1 < numOfRows &&
+            poped.x + 1 < numOfColumns &&  // FIXED
             mp[poped.y][poped.x + 1] != 1
         ) {
             let tempMoves = poped.moves.slice();
@@ -206,7 +206,7 @@ class Ghost {
         }
         if (
             poped.y - 1 >= 0 &&
-            poped.y - 1 < numOfColumns &&
+            poped.y - 1 < numOfRows &&  // FIXED
             mp[poped.y - 1][poped.x] != 1
         ) {
             let tempMoves = poped.moves.slice();
@@ -215,7 +215,7 @@ class Ghost {
         }
         if (
             poped.y + 1 >= 0 &&
-            poped.y + 1 < numOfColumns &&
+            poped.y + 1 < numOfRows &&  // FIXED
             mp[poped.y + 1][poped.x] != 1
         ) {
             let tempMoves = poped.moves.slice();
@@ -226,12 +226,49 @@ class Ghost {
     }
 
     getMapX() {
-        let mapX = parseInt(this.x / oneBlockSize);
-        return mapX;
+        return parseInt(this.x / oneBlockSize);
     }
 
     getMapY() {
-        let mapY = parseInt(this.y / oneBlockSize);
-        return mapY;
+        return parseInt(this.y / oneBlockSize);
     }
-}
+
+    getMapXRightSide() {
+        return parseInt((this.x * 0.99 + oneBlockSize) / oneBlockSize);
+    }
+
+    getMapYRightSide() {
+        return parseInt((this.y * 0.99 + oneBlockSize) / oneBlockSize);
+    }
+
+    changeAnimation() {
+        this.currentFrame =
+            this.currentFrame == this.frameCount ? 1 : this.currentFrame + 1;
+    }
+
+    draw() {
+        canvasContext.save();
+        canvasContext.drawImage(
+            ghostFrames,
+            this.imageX,
+            this.imageY,
+            this.imageWidth,
+            this.imageHeight,
+            this.x,
+            this.y,
+            this.width,
+            this.height
+        );
+        canvasContext.restore();
+        canvasContext.beginPath();
+        canvasContext.strokeStyle = "red";
+        canvasContext.arc(
+            this.x + oneBlockSize / 2,
+            this.y + oneBlockSize / 2,
+            this.range * oneBlockSize,
+            0,
+            2 * Math.PI
+        );
+        canvasContext.stroke();
+    }
+} 
