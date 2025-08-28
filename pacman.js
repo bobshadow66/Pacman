@@ -71,4 +71,38 @@ class Pacman {
                 break;
         }
     }
+
+    checkCollisions() {
+        let isCollided = false;
+        if (
+            map[parseInt(this.y / oneBlockSize)][
+                parseInt(this.x / oneBlockSize)
+            ] == 1 ||
+            map[parseInt(this.y / oneBlockSize + 0.9999)][
+                parseInt(this.x / oneBlockSize)
+            ] == 1 ||
+            map[parseInt(this.y / oneBlockSize)][
+                parseInt(this.x / oneBlockSize + 0.9999)
+            ] == 1 ||
+            map[parseInt(this.y / oneBlockSize + 0.9999)][
+                parseInt(this.x / oneBlockSize + 0.9999)
+            ] == 1
+        ) {
+            isCollided = true;
+        }
+        return isCollided;
+    }
+
+    checkGhostCollision(ghosts) {
+        for (let i = 0; i < ghosts.length; i++) {
+            let ghost = ghosts[i];
+            if (
+                ghost.getMapX() == this.getMapX() &&
+                ghost.getMapY() == this.getMapY()
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
