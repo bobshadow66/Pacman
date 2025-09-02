@@ -188,7 +188,7 @@ class Ghost {
 
         if (
             poped.x - 1 >= 0 &&
-            poped.x - 1 < numOfColumns &&  // FIXED: should compare with columns
+            poped.x - 1 < numOfRows &&
             mp[poped.y][poped.x - 1] != 1
         ) {
             let tempMoves = poped.moves.slice();
@@ -197,7 +197,7 @@ class Ghost {
         }
         if (
             poped.x + 1 >= 0 &&
-            poped.x + 1 < numOfColumns &&  // FIXED
+            poped.x + 1 < numOfRows &&
             mp[poped.y][poped.x + 1] != 1
         ) {
             let tempMoves = poped.moves.slice();
@@ -206,7 +206,7 @@ class Ghost {
         }
         if (
             poped.y - 1 >= 0 &&
-            poped.y - 1 < numOfRows &&  // FIXED
+            poped.y - 1 < numOfColumns &&
             mp[poped.y - 1][poped.x] != 1
         ) {
             let tempMoves = poped.moves.slice();
@@ -215,7 +215,7 @@ class Ghost {
         }
         if (
             poped.y + 1 >= 0 &&
-            poped.y + 1 < numOfRows &&  // FIXED
+            poped.y + 1 < numOfColumns &&
             mp[poped.y + 1][poped.x] != 1
         ) {
             let tempMoves = poped.moves.slice();
@@ -226,19 +226,23 @@ class Ghost {
     }
 
     getMapX() {
-        return parseInt(this.x / oneBlockSize);
+        let mapX = parseInt(this.x / oneBlockSize);
+        return mapX;
     }
 
     getMapY() {
-        return parseInt(this.y / oneBlockSize);
+        let mapY = parseInt(this.y / oneBlockSize);
+        return mapY;
     }
 
     getMapXRightSide() {
-        return parseInt((this.x * 0.99 + oneBlockSize) / oneBlockSize);
+        let mapX = parseInt((this.x * 0.99 + oneBlockSize) / oneBlockSize);
+        return mapX;
     }
 
     getMapYRightSide() {
-        return parseInt((this.y * 0.99 + oneBlockSize) / oneBlockSize);
+        let mapY = parseInt((this.y * 0.99 + oneBlockSize) / oneBlockSize);
+        return mapY;
     }
 
     changeAnimation() {
@@ -271,4 +275,16 @@ class Ghost {
         );
         canvasContext.stroke();
     }
-} 
+}
+
+let updateGhosts = () => {
+    for (let i = 0; i < ghosts.length; i++) {
+        ghosts[i].moveProcess();
+    }
+};
+
+let drawGhosts = () => {
+    for (let i = 0; i < ghosts.length; i++) {
+        ghosts[i].draw();
+    }
+};
