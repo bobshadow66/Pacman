@@ -169,4 +169,4 @@ class Pacman {
         );
         canvasContext.restore();
     }
-}
+} 
